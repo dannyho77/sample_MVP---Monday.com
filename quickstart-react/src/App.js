@@ -20,6 +20,7 @@ class App extends React.Component {
     };
   }
 
+// this function hones in on the specific board data related to an item's status values, and puts their total count value into a dictionary we can use later.
   createCount() {
     let dict = {};
     this.state.boardData.boards[0].items.map(item => {
@@ -31,9 +32,10 @@ class App extends React.Component {
       }
     })
     this.setState({statusCount: dict});
-    console.log(this.state.statusCount)
+    // console.log(this.state.statusCount)
   }
 
+// this function takes the setting's statusType, which is a color code, and returns the correlating status text.
   mapKey(key) {
     switch (key) {
       case 'primary':
@@ -50,10 +52,12 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+  // this imports the custom settings we created from the Monday.com web application. 
     monday.listen("settings", res => {
       this.setState({ settings: res.data });
     });
 
+  // this imports the board data of the board attached to the view app we are creating.
     monday.listen("context", res => {
       this.setState({context: res.data});
       console.log(res.data);
@@ -68,7 +72,7 @@ class App extends React.Component {
       .then(res => {
         this.setState({boardData: res.data});
         this.createCount();
-        console.log(this.state.boardData)
+        // console.log(this.state.boardData)
       });
     })
   }
@@ -78,6 +82,7 @@ class App extends React.Component {
       <AttentionBox
         title="--Check Your Status Count(s) Here--"
         text="Select a 'status type' from the drop-down menu on the right to get started!"
+        // Here, we make use of the statusCount dictionary we created earlier, keying into the currently selected 'status type', which will return the total count for that status type.
         text={"Status Count: " + (this.state.statusCount[this.mapKey(this.state.settings.statusType)] || 0)}
         type={this.state.settings.statusType}
       />
